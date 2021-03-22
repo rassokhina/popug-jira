@@ -1,0 +1,48 @@
+﻿@model IEnumerable<TaskTracker.Web.Models.Task>
+@{
+    ViewData["Title"] = "Tasks";
+}
+
+<div>
+    <a class="btn btn-primary" asp-action="Create" role="button">Create New</a>
+    <a class="btn btn-secondary"asp-action="Reassign" role="button">Reassign All</a>
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th scope="col">Description</th>
+                <th scope="col">Price</th>
+                <th scope="col">Status</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @if (item.Status == 0)
+                        {
+                            <span>Open</span>
+                        }
+                        else
+                        {
+                            <span>Finished</span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.Status == 0)
+                        {
+                            <a asp-action="Finish" asp-route-id="@item.Id">Finish</a> 
+                         }
+                    </td>
+                </tr>
+            }
+       </tbody>
+    </table>
+</div>
