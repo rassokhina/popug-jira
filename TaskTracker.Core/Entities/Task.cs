@@ -16,15 +16,12 @@ namespace TaskTracker.Core.Entities
         [Required]
         public string Description { get; set; }
 
-        [Required]
-        public int Price { get; set; }
-
         public TaskStatus Status { get; set; }
 
         public DateTimeOffset? Finished { get; set; }
 
-        public Guid? PopugId { get; set; }
+        public Guid? UserId { get; set; }
 
-        public virtual Popug Popug { get; set; }
+        public virtual User User { get; set; }
     }
 }

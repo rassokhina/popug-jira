@@ -24,14 +24,14 @@ namespace TaskTracker.Core.Services
                 .Where(x => x.Status == Entities.TaskStatus.Open)
                 .ToListAsync()
                 .ConfigureAwait(false);
-            var popugIds = await defaultContext.Popugs.Select(x => x.Id).ToArrayAsync().ConfigureAwait(false);
+            var userIds = await defaultContext.Users.Select(x => x.Id).ToArrayAsync().ConfigureAwait(false);
 
-            if (popugIds.Length > 0)
+            if (userIds.Length > 0)
             {
                 Random rand = new Random();
                 tasks.ForEach(t => {
-                    int position = rand.Next(popugIds.Length);
-                    t.PopugId = popugIds[position];
+                    int position = rand.Next(userIds.Length);
+                    t.UserId = userIds[position];
                 });
                 await defaultContext.SaveChangesAsync();
             }
@@ -44,13 +44,12 @@ namespace TaskTracker.Core.Services
                 Description = createDto.Description,
                 Created = DateTimeOffset.UtcNow,
                 Status = Entities.TaskStatus.Open,
-                Price = new Random().Next(10, 20)
             };
             await defaultContext.AddAsync(task);
             await defaultContext.SaveChangesAsync();
         }
 
-        public async Task Finish(Guid taskId, Guid popugId)
+        public async Task Finish(Guid taskId, Guid userId)
         {
             var task = await defaultContext.Tasks.FindAsync(taskId).ConfigureAwait(false);
             if (task == null)
@@ -62,19 +61,18 @@ namespace TaskTracker.Core.Services
             await defaultContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TaskDto>> GetList(Guid popugId)
+        public async Task<IEnumerable<TaskDto>> GetList(Guid userId)
         {
             return await defaultContext.Tasks
                 .AsNoTracking()
-                .Where(t => t.PopugId == popugId)
+                .Where(t => t.UserId == userId)
                 .OrderBy(x => x.Created)
                 .Select(t => new TaskDto
                 {
                     Id = t.Id,
                     Description = t.Description,
                     Status = t.Status,
-                    PopugId = t.PopugId,
-                    Price = t.Price
+                    UserId = t.UserId,
                 })
                 .ToListAsync();
         }

@@ -16,7 +16,7 @@ namespace TaskTracker.Core.Data
 
         public DbSet<Task> Tasks { get; set; }
 
-        public DbSet<Popug> Popugs { get; set; }
+        public DbSet<User> Users { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

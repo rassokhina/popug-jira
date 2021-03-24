@@ -16,29 +16,8 @@ namespace TaskTracker.Core.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("TaskTracker.Core.Entities.Popug", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Popugs");
-                });
 
             modelBuilder.Entity("TaskTracker.Core.Entities.Task", b =>
                 {
@@ -56,33 +35,52 @@ namespace TaskTracker.Core.Migrations
                     b.Property<DateTimeOffset?>("Finished")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid?>("PopugId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("PopugId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("TaskTracker.Core.Entities.Task", b =>
+            modelBuilder.Entity("TaskTracker.Core.Entities.User", b =>
                 {
-                    b.HasOne("TaskTracker.Core.Entities.Popug", "Popug")
-                        .WithMany("Tasks")
-                        .HasForeignKey("PopugId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Navigation("Popug");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TaskTracker.Core.Entities.Popug", b =>
+            modelBuilder.Entity("TaskTracker.Core.Entities.Task", b =>
+                {
+                    b.HasOne("TaskTracker.Core.Entities.User", "User")
+                        .WithMany("Tasks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TaskTracker.Core.Entities.User", b =>
+
                 {
                     b.Navigation("Tasks");
                 });

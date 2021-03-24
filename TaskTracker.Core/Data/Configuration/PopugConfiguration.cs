@@ -5,13 +5,13 @@ using TaskTracker.Core.Entities;
 
 namespace TaskTracker.Core.Data.Configuration
 {
-    internal sealed class PopugConfiguration : IEntityTypeConfiguration<Popug>
+    internal sealed class PopugConfiguration : IEntityTypeConfiguration<User>
     {
-        public void Configure(EntityTypeBuilder<Popug> builder)
+        public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasMany(x => x.Tasks)
-                  .WithOne(p => p.Popug)
-                  .HasForeignKey(p => p.PopugId)
+                  .WithOne(p => p.User)
+                  .HasForeignKey(p => p.UserId)
                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
