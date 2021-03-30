@@ -38,8 +38,8 @@ namespace TaskTracker.Core.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -50,19 +50,19 @@ namespace TaskTracker.Core.Migrations
 
             modelBuilder.Entity("TaskTracker.Core.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -80,7 +80,6 @@ namespace TaskTracker.Core.Migrations
                 });
 
             modelBuilder.Entity("TaskTracker.Core.Entities.User", b =>
-
                 {
                     b.Navigation("Tasks");
                 });

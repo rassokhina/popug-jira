@@ -22,7 +22,7 @@ namespace TaskTracker.Core.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new TaskConfiguration());
-            builder.ApplyConfiguration(new PopugConfiguration());
+            builder.ApplyConfiguration(new UserConfiguration());
 
             base.OnModelCreating(builder);
         }
@@ -30,7 +30,6 @@ namespace TaskTracker.Core.Data
         public static void ToLatestVersion(IServiceProvider serviceProvider)
         {
             using var context = new DefaultContext(serviceProvider.GetService<DbContextOptions<DefaultContext>>());
-            context.Database.SetCommandTimeout(600);
             context.Database.Migrate();
         }
     }

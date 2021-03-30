@@ -11,8 +11,6 @@ namespace TaskTracker.Client.Models
 
         public int Status { get; set; }
 
-        public int Price { get; set; }
-
-        public Guid? UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

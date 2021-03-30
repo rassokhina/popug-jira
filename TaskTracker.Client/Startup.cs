@@ -13,6 +13,12 @@ using Microsoft.EntityFrameworkCore;
 
 using TaskTracker.Core.Services;
 using TaskTracker.Core.Data;
+using MassTransit;
+
+using Shared;
+using Shared.Events;
+
+using TaskTracker.Client.Consumers;
 
 namespace TaskTracker.Client
 {
@@ -37,6 +43,21 @@ namespace TaskTracker.Client
             services.AddCors();
 
             services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<UserCreatedEvent>();
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<UserCreatedConsumer>();
+
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.ReceiveEndpoint(Constants.UserQueueTaskTracker, e =>
+                    {
+                        e.ConfigureConsumer<UserCreatedConsumer>(context);
+                    });
+                });
+            });
+            services.AddMassTransitHostedService();
 
             services.AddAuthentication(options =>
             {
