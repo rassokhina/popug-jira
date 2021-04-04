@@ -7,7 +7,6 @@ namespace TaskTracker.Core.Entities
     public class Task
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [Required]
@@ -20,7 +19,7 @@ namespace TaskTracker.Core.Entities
 
         public DateTimeOffset? Finished { get; set; }
 
-        public Guid? UserId { get; set; }
+        public string UserId { get; set; }
 
         public virtual User User { get; set; }
     }

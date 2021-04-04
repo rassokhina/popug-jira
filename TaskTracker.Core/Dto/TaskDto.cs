@@ -14,6 +14,6 @@ namespace TaskTracker.Core.Dto
 
         public int Price { get; set; }
 
-        public Guid? UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

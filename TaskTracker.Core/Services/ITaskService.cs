@@ -10,10 +10,10 @@ namespace TaskTracker.Core.Services
     {
         Task Reassign();
 
-        Task<IEnumerable<TaskDto>> GetList(Guid userId);
+        Task<IEnumerable<TaskDto>> GetList(string userId);
 
         Task Create(TaskCreateDto createDto);
 
-        Task Finish(Guid taskId, Guid userId);
+        Task Finish(Guid taskId, string userId);
     }
 }

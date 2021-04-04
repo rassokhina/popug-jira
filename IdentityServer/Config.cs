@@ -4,6 +4,8 @@ using IdentityServer4.Test;
 using System.Collections.Generic;
 using System.Security.Claims;
 
+using IdentityModel;
+
 namespace IdentityServer
 {
     public static class Config
@@ -33,48 +35,40 @@ namespace IdentityServer
               {
                   SubjectId = "a9ea0f25-b964-409f-bcce-c923266249b4",
                   Username = "admin",
-                  Password = "admin",
+                  Password = "Password123!",
                   Claims = new List<Claim>
                   {
-                      new Claim("given_name", "admin"),
-                      new Claim("family_name", "admin"),
-                      new Claim("role", "Admin")
+                      new Claim(JwtClaimTypes.Role, "Admin")
                   }
               },
               new TestUser
               {
                   SubjectId = "c95ddb8c-79ec-488a-a485-fe57a1462340",
                   Username = "employee",
-                  Password = "employee",
+                  Password = "Password123!",
                   Claims = new List<Claim>
                   {
-                      new Claim("given_name", "employee"),
-                      new Claim("family_name", "employee"),
-                      new Claim("role", "Employee")
+                      new Claim(JwtClaimTypes.Role, "Employee")
                   }
               },
                new TestUser
                {
                   SubjectId = "c85ddb8c-79ec-488a-a485-fe57a1462340",
                   Username = "manager",
-                  Password = "manager",
+                  Password = "Password123!",
                   Claims = new List<Claim>
                   {
-                      new Claim("given_name", "manager"),
-                      new Claim("family_name", "manager"),
-                      new Claim("role", "Manager")
+                      new Claim(JwtClaimTypes.Role, "Manager")
                   }
                },
                 new TestUser
                {
                   SubjectId = "c89ddb8c-79ec-488a-a485-fe57a1462340",
                   Username = "accountant",
-                  Password = "accountant",
+                  Password = "Password123!",
                   Claims = new List<Claim>
                   {
-                      new Claim("given_name", "accountant"),
-                      new Claim("family_name", "accountant"),
-                      new Claim("role", "Accountant")
+                      new Claim(JwtClaimTypes.Role, "Accountant")
                   }
                },
           };

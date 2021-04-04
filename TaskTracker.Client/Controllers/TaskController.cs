@@ -25,14 +25,13 @@ namespace TaskTracker.Client.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = HttpContext.User.FindFirst("sub").Value;
-            var tasks = await taskService.GetList(new Guid(userId));
+            var tasks = await taskService.GetList(userId);
             return View(tasks.Select(x => new Task
             {
                 Id = x.Id,
                 Description = x.Description,
                 UserId = x.UserId,
-                Status = (int)x.Status,
-                Price = x.Price
+                Status = (int)x.Status
             }));
         }
 
@@ -44,7 +43,7 @@ namespace TaskTracker.Client.Controllers
             }
 
             var userId = HttpContext.User.FindFirst("sub").Value;
-            await taskService.Finish(id.Value, new Guid(userId));
+            await taskService.Finish(id.Value, userId);
 
             return RedirectToAction(nameof(Index));
         }
