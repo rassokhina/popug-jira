@@ -1,0 +1,44 @@
+﻿@model Accounting.Client.Models.WalletModel
+@{
+    ViewData["Title"] = "WalletAudit";
+}
+
+<div>
+    <div class="p-3 border bg-light">Earned by management today: @Model.EarnedByManagement</div>
+    <div class="p-3">Earned by you today:</div>
+    <table class="table mt-3">
+        <thead>
+        <tr>
+            <th scope="col">Time</th>
+            <th scope="col">Description</th>
+            <th scope="col">Change</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.WalletAudits)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Time)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MoneyChange)
+                </td>
+            </tr>
+        }
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="2">
+                <div class="font-weight-bold">Total</div>
+            </td>
+            <td>
+                <div>@Model.WalletAudits.Sum(x => x.MoneyChange)</div>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</div>

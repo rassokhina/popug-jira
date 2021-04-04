@@ -1,24 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaskTracker.Core.Entities
 {
     public class User
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [Required]
-        public DateTimeOffset Created { get; set; }
+        public string PublicId { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+
+        public DateTimeOffset? UpdatedAt { get; set; }
 
         [Required]
-        public UserRole Role { get; set; }
+        public string Username { get; set; }
+
+        [Required]
+        public string Role { get; set; }
 
         public virtual ICollection<Task> Tasks { get; set; }
     }

@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+
+using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
-using TaskTracker.Core.Services;
+using TaskTracker.Core.Commands;
+using TaskTracker.Core.Queries;
+
 using Task = TaskTracker.Client.Models.Task;
 
 namespace TaskTracker.Client.Controllers
@@ -13,30 +18,27 @@ namespace TaskTracker.Client.Controllers
     [Authorize]
     public class TaskController : Controller
     {
-        private readonly ITaskService taskService;
-        private readonly ILogger<TaskController> logger;
+        private readonly IMediator mediator;
 
-        public TaskController(ITaskService taskService, ILogger<TaskController> logger)
+        public TaskController(IMediator mediator)
         {
-            this.taskService = taskService ?? throw new ArgumentNullException(nameof(taskService));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public async Task<IActionResult> Index()
         {
             var userId = HttpContext.User.FindFirst("sub").Value;
-            var tasks = await taskService.GetList(new Guid(userId));
+            var tasks = await mediator.Send(new GetTasksQuery { UserId = userId } );
             return View(tasks.Select(x => new Task
             {
                 Id = x.Id,
                 Description = x.Description,
                 UserId = x.UserId,
-                Status = (int)x.Status,
-                Price = x.Price
+                Status = (int)x.Status
             }));
         }
 
-        public async Task<IActionResult> Finish(Guid? id)
+        public async Task<IActionResult> Finish(Guid? id, CancellationToken token)
         {
             if (!id.HasValue)
             {
@@ -44,15 +46,15 @@ namespace TaskTracker.Client.Controllers
             }
 
             var userId = HttpContext.User.FindFirst("sub").Value;
-            await taskService.Finish(id.Value, new Guid(userId));
+            await mediator.Send(new FinishTaskCommand() {UserId = userId, TaskId = id.Value}, token);
 
             return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admin,Manager")]
-        public async Task<IActionResult> Reassign()
+        public async Task<IActionResult> Reassign(CancellationToken token)
         {
-            await taskService.Reassign();
+            await mediator.Send(new ReassignTasksCommand(), token);
             return RedirectToAction(nameof(Index));
         }
 
@@ -63,11 +65,11 @@ namespace TaskTracker.Client.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Description")] Task task)
+        public async Task<IActionResult> Create([Bind("Description")] CreateTaskCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
-                await taskService.Create(new Core.Dto.TaskCreateDto { Description = task.Description });
+                await mediator.Send(command, token);
                 return RedirectToAction(nameof(Index));
             }
             return RedirectToAction(nameof(Index));

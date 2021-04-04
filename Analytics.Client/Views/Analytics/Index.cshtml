@@ -1,0 +1,49 @@
+﻿@using Analytics.Core.Dto
+@model Analytics.Client.Models.AnalyticsModel
+@{
+    ViewData["Title"] = "Analytics";
+}
+
+<div>
+    <div class="p-3 border bg-light">Earned by management today: @Model.EarnedByManagement</div>
+    <div class="p-3">Most expensive tasks:</div>
+    <table class="table mt-3">
+        <thead>
+        <tr>
+            <th scope="col">Period</th>
+            <th scope="col">Date</th>
+            <th scope="col">Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.ExpensiveTasks)
+        {
+            @if (item != null)
+            {
+                <tr>
+                    <td>
+                        @if (item.Period == PeriodDto.Day)
+                        {
+                            <span>Day</span>
+                        }
+                        @if (item.Period == PeriodDto.Week)
+                        {
+                            <span>Week</span>
+                        }
+                        @if (item.Period == PeriodDto.Month)
+                        {
+                            <span>Month</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PeriodString)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                </tr>
+            }
+        }
+        </tbody>
+        </table>
+</div>

@@ -1,15 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace TaskTracker.Client.Controllers
 {
     public class AccountController : Controller
     {
-        public async Task Logout()
+        public IActionResult Logout()
         {
-            await HttpContext.SignOutAsync("Cookies");
-            await HttpContext.SignOutAsync("oidc");
+            return SignOut("Cookies", "oidc");
         }
 
         public IActionResult AccessDenied()

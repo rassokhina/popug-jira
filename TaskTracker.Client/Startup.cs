@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,8 +13,16 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 
-using TaskTracker.Core.Services;
 using TaskTracker.Core.Data;
+using MassTransit;
+
+using MediatR;
+
+using Shared;
+using Shared.Events;
+
+using TaskTracker.Client.Consumers;
+using TaskTracker.Core.Queries;
 
 namespace TaskTracker.Client
 {
@@ -36,7 +46,27 @@ namespace TaskTracker.Client
 
             services.AddCors();
 
-            services.AddScoped<ITaskService, TaskService>();
+            services.AddMediatR(typeof(GetTasksQuery).GetTypeInfo().Assembly);
+
+            services.AddScoped<UserCreatedConsumer>();
+            services.AddScoped<TaskAssignedConsumer>();
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<UserCreatedConsumer>();
+                x.AddConsumer<TaskAssignedConsumer>();
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.ReceiveEndpoint(Constants.UserQueueTaskTracker, e =>
+                    {
+                        e.ConfigureConsumer<UserCreatedConsumer>(context);
+                    });
+                    cfg.ReceiveEndpoint(Constants.TaskQueueTaskTracker, e =>
+                    {
+                        e.ConfigureConsumer<TaskAssignedConsumer>(context);
+                    });
+                });
+            });
+            services.AddMassTransitHostedService();
 
             services.AddAuthentication(options =>
             {
