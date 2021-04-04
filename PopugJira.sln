@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analytics.Client", "Analytics.Client\Analytics.Client.csproj", "{D1269D1C-2614-48C9-9748-32F2121C7963}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analytics.Core", "Analytics.Core\Analytics.Core.csproj", "{0C2E8D84-E864-4DEF-B5F6-48CFDC0253BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analytics.Core", "Analytics.Core\Analytics.Core.csproj", "{0C2E8D84-E864-4DEF-B5F6-48CFDC0253BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

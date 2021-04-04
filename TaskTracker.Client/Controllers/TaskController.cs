@@ -47,7 +47,6 @@ namespace TaskTracker.Client.Controllers
 
             var userId = HttpContext.User.FindFirst("sub").Value;
             await mediator.Send(new FinishTaskCommand() {UserId = userId, TaskId = id.Value}, token);
-
             return RedirectToAction(nameof(Index));
         }
 

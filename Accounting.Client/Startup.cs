@@ -81,6 +81,7 @@ namespace Accounting.Client
                 x.AddConsumer<BalancePaidConsumer>();
                 x.AddConsumer<TaskFinishedConsumer>();
                 x.AddConsumer<TaskAssignedConsumer>();
+
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.ReceiveEndpoint(Constants.TaskQueueAccounting, e =>

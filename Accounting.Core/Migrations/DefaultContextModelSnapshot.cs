@@ -57,7 +57,6 @@ namespace Accounting.Core.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("UserId1");
-
                     b.ToTable("Tasks");
                 });
 

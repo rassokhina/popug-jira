@@ -54,6 +54,7 @@ namespace TaskTracker.Client
             {
                 x.AddConsumer<UserCreatedConsumer>();
                 x.AddConsumer<TaskAssignedConsumer>();
+
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.ReceiveEndpoint(Constants.UserQueueTaskTracker, e =>
