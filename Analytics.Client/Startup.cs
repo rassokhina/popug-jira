@@ -77,7 +77,7 @@ namespace Analytics.Client
                     {
                         e.ConfigureConsumer<UserCreatedConsumer>(context);
                     });
-                    cfg.ReceiveEndpoint(Constants.BalanceQueueAccounting, e =>
+                    cfg.ReceiveEndpoint(Constants.BalanceQueueAnalytics, e =>
                     {
                         e.ConfigureConsumer<BalanceChangedConsumer>(context);
                     });
