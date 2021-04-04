@@ -1,17 +1,75 @@
-# popug-jira
+# Popug Jira - .NET Microservices Application
 
-Homework 2 и Homework 3 на отдельных листах по ссылке
-https://docs.google.com/spreadsheets/d/1L3Ps-KuqITiVEgP_uexoLFAhvsJw53-2fXmX-EvGTd8/edit?usp=sharing
+Training .NET app, based on microservices architecture. The application includes a task tracker service, an analytics service and a billing service. Each of these services uses common auth service for authentication and authorization.
 
+## Technologies
 
-Homework 5 - обновленная схема коммуникаций между сервисами
-![image](https://user-images.githubusercontent.com/11731408/112976666-5b166300-917f-11eb-850e-2cbbbfc1e84c.png)
+* .NET 5
+* Idendity Server 4
+* EF Core
+* RabbitMQ
+* MassTransit
+* Quartz.NET
 
-Homework 6 - 
-Schema Registry будет сделана на основе MassTransit - библиотеки, используемой как обертка для брокеров сообщений. 
-В проект Shared вынесены все события, он будет обернут в nuget пакет и подключаться для каждого сервиса, который работает с событиями. Таким образом это будет единственное "место правды", на которое можно опираться для верификации событий и их версий.
+## Overview
 
-Homework 7 - 
-В сервисе TaskTracker создается событие TaskAssined и консьюмится в нем же, при получении события нотификация о ной задаче должна приходить юзеру по смс (логика по отправке находится в сервиспе TaskTracker) 
-В сервисе Accunting создается событие BalanceReset при обнулении баланса и консьюмится в нем же, при получении события нотификация о выплате должна приходить юзеру(логика по отправке находится в сервиспе Accunting, т.к. нотификация относится к этому сервису). 
-Данные юзера оба сервиса берут из таблицы User, у каждого своя таблица. 
+This training project contains microservices (each one owning its own SQL database), impelements CQRS pattern, supports asynchronous communication for CUD and Business events propagation across multiple services based on RabbitMQ Event Bus. Identity Server 4 implements OpenID Connect and OAuth 2.0 protocols and is used for authentication and authorization into each service. 
+
+CQRS is used to divide the application into Read and Write flows. Is helps to easily take advantage of Event Sourcing.
+
+Each microservice has its own database since they must be loosely coupled so that they can be developed, deployed and scaled independently (SQL provider for EF Core is used and can be easily changed to another db provider). 
+
+Microservices communicate with each other by events. Event communication is handled with RabbitMQ to convey integration events. EventStrorming approach was implemented to design maintainable event-driven architecture and distinguish main business events. 
+
+**Microservces communication schema**
+![image](https://user-images.githubusercontent.com/11731408/113512591-935ade80-958f-11eb-998f-98d3a0aa2cbf.png)
+
+The Schema Registry for events is based on MassTransit, a library used as a wrapper around message brokers.
+All events are taken out in the Shared project, it is connected for each service that consumes and produces events. Thus, this is the only "place of truth" that can be relied on to verify the events and their versions.
+
+## Projects
+
+* **IdentityServer** - service for authentication and authorization, IS4 based
+
+![image](https://user-images.githubusercontent.com/11731408/113515497-10418480-959f-11eb-851c-ddf24f03d498.png)
+
+* **TaskTracker.Core** - library containing business logic for task tracker service (create and assign tasks for users, view user task list)
+
+* **TaskTracker.Client** - MVC Core client for task tracker service
+
+![image](https://user-images.githubusercontent.com/11731408/113515606-b097a900-959f-11eb-9ffe-e6245100ce93.png)
+
+* **Accounting.Core** - library containing business logic for accounting service (view user balance audit, ensures the accrual of money for completed tasks and payment of the balance to users every day)
+
+* **Accounting.Client** - MVC Core client for acconting service
+
+![image](https://user-images.githubusercontent.com/11731408/113515749-9611ff80-95a0-11eb-9982-ec494c5a88cb.png)
+
+* **Analytics.Core** - library containing business logic for anlytics service (view statistics for the most expensive tasks)
+
+* **Analytics.Client** - MVC Core client for anlytics service
+
+![image](https://user-images.githubusercontent.com/11731408/113515837-0c166680-95a1-11eb-8882-117b9599a85f.png)
+
+* **Shared** - shared library containing events and queue settings for event bus
+
+## Installation
+
+1. Install SQR Server 
+2. Install Erlang and RabbitMQ <https://www.rabbitmq.com/#getstarted>
+3. Open .sln file in Visual Studio 2019 version supported .NET 5
+4. Configure SQL connection string in appsettings.json files for each .Client project 
+5. Run the following projects in the solution:
+    - IdentityServer <https://localhost:5001/>
+    - TaskTracker.Client <https://localhost:5002/>
+    - Accounting.Client <https://localhost:5003/>
+    - Analytics.Client <https://localhost:5004/>
+
+Users to test
+
+| Username | Password |
+| -------- | -------- |
+| admin   | Password123!     |
+| employee    | Password123!    |
+| manager    | Password123!    |
+| accountant    | Password123!    |
