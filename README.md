@@ -22,7 +22,8 @@ Each microservice has its own database since they must be loosely coupled so tha
 Microservices communicate with each other by events. Event communication is handled with RabbitMQ to convey integration events. EventStrorming approach was implemented to design maintainable event-driven architecture and distinguish main business events. 
 
 **Microservces communication schema**
-![image](https://user-images.githubusercontent.com/11731408/113512591-935ade80-958f-11eb-998f-98d3a0aa2cbf.png)
+![image](https://user-images.githubusercontent.com/11731408/114268608-1d8dc180-9a2c-11eb-80b1-1c8c7bc83a18.png)
+
 
 The Schema Registry for events is based on MassTransit, a library used as a wrapper around message brokers.
 All events are taken out in the Shared project, it is connected for each service that consumes and produces events. Thus, this is the only "place of truth" that can be relied on to verify the events and their versions.
@@ -55,7 +56,7 @@ All events are taken out in the Shared project, it is connected for each service
 
 ## Installation
 
-1. Install SQR Server 
+1. Install SQL Server 
 2. Install Erlang and RabbitMQ <https://www.rabbitmq.com/#getstarted>
 3. Open .sln file in Visual Studio 2019 version supported .NET 5
 4. Configure SQL connection string in appsettings.json files for each .Client project 
